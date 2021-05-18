@@ -7,6 +7,12 @@ import {MatTabsModule} from "@angular/material/tabs";
 import { CrcComponent } from './crc/crc.component';
 import { HammingComponent } from './hamming/hamming.component';
 import { ParityCheckComponent } from './parity-check/parity-check.component';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import {MatCardModule} from "@angular/material/card";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -19,9 +25,17 @@ import { ParityCheckComponent } from './parity-check/parity-check.component';
     BrowserModule,
     NoopAnimationsModule,
     BrowserAnimationsModule,
-    MatTabsModule
+    FormsModule,
+    MatTabsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatButtonModule
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

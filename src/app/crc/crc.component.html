@@ -1,1 +1,41 @@
-<p>crc works!</p>
+<mat-card>
+  <mat-form-field appearance="fill">
+    <mat-label>{{selected ? selected.name : 'Wybierz typ CRC'}}</mat-label>
+    <mat-select [(ngModel)]="selected">
+      <mat-option [value]="it" *ngFor="let it of crcStorage.getAll()">{{it.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <p>Wygenerowany wielomian CRC:</p>
+  <p>{{selected?.polynomialLabel}}</p>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Dane wejściowe</mat-label>
+    <textarea matInput #inputText></textarea>
+  </mat-form-field>
+
+  <p>Wygenerowany ciąg bitowy:</p>
+  <div>{{selected ? strToByteArrayString(inputText.value) : ''}}</div>
+
+  <p>Dane wejściowe z dołączonymi '0':</p>
+  <div>{{selected ? strToEmptyByteArrayString(inputText.value) + dec2bin(selected.calculate(inputText.value)) : ''}}</div>
+
+  <p>Wyliczony kod nadmiarowy CRC:</p>
+  <div>{{selected ? strToByteArrayString(inputText.value) + repeat0(dec2bin(selected.calculate(inputText.value)).length) : ''}}</div>
+
+  <p>Wygenerowany kod CRC:</p>
+  <div>{{crcMessage(selected, inputText.value)}}</div>
+
+  <br/>
+  <mat-form-field class="example-full-width">
+    <mat-label>Ustaw błąd</mat-label>
+    <input matInput type="number" min="0" #errorInput/>
+  </mat-form-field>
+
+  <p>Dane do przesłania:</p>
+  <div>{{errorInput.value? negBit(crcMessage(selected, inputText.value), errorInput.value) : crcMessage(selected, inputText.value)}}</div>
+
+  <p>Kod nadmiarowy po rozkodowaniu:</p>
+  <div></div>
+
+</mat-card>
