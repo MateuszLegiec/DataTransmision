@@ -45,20 +45,16 @@ class CrcModel {
   readonly polynomialLabel: string;
   private readonly initial: number;
   private readonly finalXor: number;
-  private readonly inputReflected: boolean;
-  private readonly resultReflected: boolean;
   private readonly msbMask: number;
   readonly crcTable: any[];
   private readonly castMask: number;
 
-  constructor(width: number, name: string, polynomial: number, initial: number, finalXor: number, inputReflected: boolean, resultReflected: boolean, reversed: boolean, polynomialLabel: string) {
+  constructor(width: number, name: string, polynomial: number, initial: number, finalXor: number, polynomialLabel: string) {
     this.width = width;
     this.name = name;
     this.polynomial = polynomial;
     this.initial = initial;
     this.finalXor = finalXor;
-    this.inputReflected = inputReflected;
-    this.resultReflected = resultReflected;
     this.msbMask = 0x01 << (width - 1);
     this.crcTable = new Array(256);
     this.polynomialLabel = polynomialLabel;
@@ -69,37 +65,26 @@ class CrcModel {
     else if (width === 32) this.castMask = 0xFFFFFFFF;
     else throw new Error("Invalid width");
 
-
-    if (reversed){
-      this.calcCrcTableReversed()
-    } else {
-      this.calcCrcTable();
-    }
+    this.calcCrcTable();
   }
 
   calculate(inputText: string) {
-    let bytes = this.getCharacterByteArrayFromString(inputText);
+    let bytes = CrcModel.getCharacterByteArrayFromString(inputText);
     let crc = this.initial;
     for (let i = 0; i < bytes.length; i++) {
       let curByte = bytes[i] & 0xFF;
-      if (this.inputReflected) {
-        curByte = this.reflect8(curByte);
-      }
       crc = (crc ^ (curByte << (this.width - 8))) & this.castMask;
       const pos = (crc >> (this.width - 8)) & 0xFF;
       crc = (crc << 8) & this.castMask;
       crc = (crc ^ this.crcTable[pos]) & this.castMask;
     }
 
-    if (this.resultReflected) {
-      crc = this.reflectGeneric(crc, this.width);
-    }
     return ((crc ^ this.finalXor) & this.castMask);
   }
 
   private calcCrcTable() {
-    for (let divided = 0; divided < 256; divided++) {
-      let currByte = (divided << (this.width - 8)) & this.castMask;
+    for (let i = 0; i < 256; i++) {
+      let currByte = (i << (this.width - 8)) & this.castMask;
       for (let bit = 0; bit < 8; bit++) {
         if ((currByte & this.msbMask) !== 0) {
           currByte <<= 1;
@@ -108,49 +93,11 @@ class CrcModel {
           currByte <<= 1;
         }
       }
-      this.crcTable[divided] = (currByte & this.castMask);
+      this.crcTable[i] = (currByte & this.castMask);
     }
   }
 
-  private calcCrcTableReversed() {
-    for (let dividend = 0; dividend < 256; dividend++) {
-      const reflectedDividend = this.reflect8(dividend);
-      let currByte = (reflectedDividend << (this.width - 8)) & this.castMask;
-      for (let bit = 0; bit < 8; bit++) {
-        if ((currByte & this.msbMask) !== 0) {
-          currByte <<= 1;
-          currByte ^= this.polynomial;
-        } else {
-          currByte <<= 1;
-        }
-      }
-      currByte = this.reflectGeneric(currByte, this.width);
-      this.crcTable[dividend] = (currByte & this.castMask);
-    }
-  }
-
-  private reflect8(val: number) {
-    let resByte = 0;
-    for (let i = 0; i < 8; i++) {
-      if ((val & (1 << i)) !== 0) {
-        resByte |= ((1 << (7 - i)) & 0xFF);
-      }
-    }
-    return resByte;
-  }
-
-
-  private reflectGeneric(val: number, width: number) {
-    let resByte = 0;
-    for (let i = 0; i < width; i++) {
-      if ((val & (1 << i)) !== 0) {
-        resByte |= (1 << ((width - 1) - i));
-      }
-    }
-    return resByte;
-  }
-
-  private getCharacterByteArrayFromString(str: string) {
+  private static getCharacterByteArrayFromString(str: string) {
     let charVal;
     const bytes = [];
     for (let i = 0; i < str.length; i++) {
@@ -168,14 +115,14 @@ class CrcStorage {
 
   constructor() {
     this.storage = [
-      new CrcModel(8, "ATM", 0x07, 0x00, 0x00, false, false, false, "100000111"),
-      new CrcModel(12, "CRC_12", 0x80F, 0x00, 0x00, false, false, false, "1100000001111"),
-      new CrcModel(16, "CRC_16", 0x8005, 0x00, 0x00, false, false, false, "11000000000000101"),
-      new CrcModel(16, "CRC_16_REVERSE", 0x4003, 0x00, 0x55, false, false, false, "10100000000000011"),
-      new CrcModel(16, "CRC_ITU", 0x1021, 0x00, 0x00, false, false, false, "10001000000100001"),
-      new CrcModel(16, "SDLC",  0x1021, 0x1D0F, 0x0000, false, false, false, "10001000000100001"),
-      new CrcModel(16, "SDLC_REVERSE",  0x0811, 0x1D0F, 0x0000, false, false, true, "10000100000010001"),
-      new CrcModel(32, "CRC32", 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true, true, false, "100000100110000010001110110110111"),
+      new CrcModel(8, "ATM", 0x07, 0x00, 0x00, "100000111"),
+      new CrcModel(12, "CRC_12", 0x80F, 0x00, 0x00, "1100000001111"),
+      new CrcModel(16, "CRC_16", 0x8005, 0x00, 0x00, "11000000000000101"),
+      new CrcModel(16, "CRC_16_REVERSE", 0x4003, 0x00, 0x55, "10100000000000011"),
+      new CrcModel(16, "CRC_ITU", 0x1021, 0x00, 0x00, "10001000000100001"),
+      new CrcModel(16, "SDLC",  0x1021, 0x1D0F, 0x0000, "10001000000100001"),
+      new CrcModel(16, "SDLC_REVERSE",  0x0811, 0x1D0F, 0x0000, "10000100000010001"),
+      new CrcModel(32, "CRC32", 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, "100000100110000010001110110110111"),
     ];
   }
 
