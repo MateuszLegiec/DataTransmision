@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-const replaceAt = function(str: string, index: number, replacement: string) {
-  return str.substr(0, index) + replacement + str.substr(index + replacement.length);
-}
-
 @Component({
   selector: 'app-crc',
   templateUrl: './crc.component.html',
@@ -38,12 +34,6 @@ export class CrcComponent implements OnInit {
   repeat0 = (len: number) => '0'.repeat(len);
 
   crcMessage = (crc: CrcModel | null, str: string) => crc ? this.strToByteArrayString(str) + this.dec2bin(crc.calculate(str)) : '';
-
-  negBit = (str: string, bit: any) => {
-    let index = str.length - Number(bit) - 1;
-    if (index < 0 || index >= str.length) throw Error()
-    return (str.charAt(index) === '0') ? replaceAt(str, index, '1') : replaceAt(str, index, '0');
-  }
 
 }
 

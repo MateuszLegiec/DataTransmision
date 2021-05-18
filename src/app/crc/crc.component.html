@@ -18,13 +18,22 @@
   <div>{{selected ? strToByteArrayString(inputText.value) : ''}}</div>
 
   <p>Dane wejściowe z dołączonymi '0':</p>
-  <div>{{selected ? strToEmptyByteArrayString(inputText.value) + dec2bin(selected.calculate(inputText.value)) : ''}}</div>
+  <div *ngIf="selected">
+    <span>{{strToEmptyByteArrayString(inputText.value)}}</span>
+    <span class="color-orange">{{dec2bin(selected.calculate(inputText.value))}}</span>
+  </div>
 
   <p>Wyliczony kod nadmiarowy CRC:</p>
-  <div>{{selected ? strToByteArrayString(inputText.value) + repeat0(dec2bin(selected.calculate(inputText.value)).length) : ''}}</div>
+  <div *ngIf="selected">
+    <span>{{strToByteArrayString(inputText.value)}}</span>
+    <span class="color-orange">{{repeat0(dec2bin(selected.calculate(inputText.value)).length)}}</span>
+  </div>
 
   <p>Wygenerowany kod CRC:</p>
-  <div>{{crcMessage(selected, inputText.value)}}</div>
+  <div *ngIf="selected">
+    <span>{{this.strToByteArrayString(inputText.value)}}</span>
+    <span class="color-orange">{{this.dec2bin(selected.calculate(inputText.value))}}</span>
+  </div>
 
   <br/>
   <mat-form-field class="example-full-width">
@@ -33,9 +42,6 @@
   </mat-form-field>
 
   <p>Dane do przesłania:</p>
-  <div>{{errorInput.value? negBit(crcMessage(selected, inputText.value), errorInput.value) : crcMessage(selected, inputText.value)}}</div>
-
-  <p>Kod nadmiarowy po rozkodowaniu:</p>
-  <div></div>
+  <app-bit-negation [crc]="crcMessage(selected, inputText.value)" [positionToNegate]="errorInput.value"></app-bit-negation>
 
 </mat-card>
