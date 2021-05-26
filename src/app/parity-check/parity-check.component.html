@@ -1,1 +1,27 @@
-<p>parity-check works!</p>
+<mat-card class="form-container">
+    <mat-form-field class="form-field">
+      <mat-label>Dane wejściowe</mat-label>
+      <textarea matInput #parityInput></textarea>
+    </mat-form-field>
+  
+    <p class="output-title">Wygenerowany ciąg bitowy:</p>
+    <div class="output-textarea">{{ strToByteArrayString(parityInput.value) }}</div>
+  
+    <p class="output-title">Wygenerowany kod parzystości:</p>
+    <div class="output-textarea">{{ encodeParityCode() }}</div>
+  
+    <mat-form-field class="form-field">
+      <mat-label>Ustaw błąd</mat-label>
+      <input matInput type="number" min="0" #errorInput/>
+    </mat-form-field>
+      
+    <p class="output-title">Wygenerowane dane z wprowadzonym błędem:</p>
+    <div class="output-textarea">{{ setErrors(errorInput.value) }}</div>
+  
+    <p class="output-title">Dane po próbie korekcji:</p>
+    <div class="output-textarea">{{ fixErrors() }}</div>
+  
+    <p class="output-title">Dane wyjściowe:</p>
+    <div class="output-textarea">{{ decodeParityCode() }}</div>
+  </mat-card>
+
