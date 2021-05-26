@@ -1,1 +1,47 @@
-<p>hamming works!</p>
+<mat-card class="form-container">
+
+<!--  <p class="output-title">Wygenerowany wielomian CRC:</p>-->
+<!--  <p class="output-textarea"></p>-->
+
+  <mat-form-field  class="form-field">
+    <mat-label>Dane wejściowe</mat-label>
+    <textarea matInput #inputText></textarea>
+  </mat-form-field>
+
+  <p class="output-title">Wygenerowany ciąg bitowy:</p>
+  <div class="output-textarea">{{strToByteArrayString(inputText.value)}}</div>
+
+<!--  <p class="output-title">Dane wejściowe z dołączonymi '0':</p>-->
+<!--  <div *ngIf="selected" class="output-textarea">-->
+<!--    <span></span>-->
+<!--    <span class="color-orange"></span>-->
+<!--  </div>-->
+
+<!--  <p class="output-title">Wyliczony kod nadmiarowy CRC:</p>-->
+<!--  <div *ngIf="selected" class="output-textarea">-->
+<!--    <span></span>-->
+<!--    <span class="color-orange"></span>-->
+<!--  </div>-->
+
+<!--  <p class="output-title">Wygenerowany kod Hamminga:</p>-->
+<!--  <div *ngIf="selected" class="output-textarea">-->
+<!--    <span></span>-->
+<!--    <span class="color-orange"></span>-->
+<!--  </div>-->
+
+<!--  <br/>-->
+<!--  <mat-form-field  class="form-field">-->
+<!--    <mat-label>Ustaw błąd</mat-label>-->
+<!--    <input matInput type="number" min="0" #errorInput/>-->
+<!--  </mat-form-field>-->
+
+  <p class="output-title">Dane zakodowane:</p>
+  <div class="output-textarea">{{encodeHamming(strToByteArrayString(inputText.value))}}</div>
+
+  <p class="output-title">Dane odkodowane:</p>
+  <div class="output-textarea">{{decodeHamming(encodeHamming(strToByteArrayString(inputText.value)))}}</div>
+
+  <p class="output-title">Dane odkodowane:</p>
+  <div class="output-textarea">{{ByteArrayStringToString(decodeHamming(encodeHamming(strToByteArrayString(inputText.value))))}}</div>
+
+</mat-card>

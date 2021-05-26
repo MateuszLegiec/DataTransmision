@@ -1,47 +1,48 @@
-<mat-card>
-  <mat-form-field appearance="fill">
+<mat-card class="form-container">
+  <mat-form-field appearance="fill" class="form-field">
     <mat-label>{{selected ? selected.name : 'Wybierz typ CRC'}}</mat-label>
     <mat-select [(ngModel)]="selected">
       <mat-option [value]="it" *ngFor="let it of crcStorage.getAll()">{{it.name}}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <p>Wygenerowany wielomian CRC:</p>
-  <p>{{selected?.polynomialLabel}}</p>
+  <p class="output-title">Wygenerowany wielomian CRC:</p>
+  <p class="output-textarea">{{selected?.polynomialLabel}}</p>
 
-  <mat-form-field class="example-full-width">
+  <mat-form-field  class="form-field">
     <mat-label>Dane wejściowe</mat-label>
     <textarea matInput #inputText></textarea>
   </mat-form-field>
 
-  <p>Wygenerowany ciąg bitowy:</p>
-  <div>{{selected ? strToByteArrayString(inputText.value) : ''}}</div>
+  <p class="output-title">Wygenerowany ciąg bitowy:</p>
+  <div class="output-textarea">{{selected ? strToByteArrayString(inputText.value) : ''}}</div>
 
-  <p>Dane wejściowe z dołączonymi '0':</p>
-  <div *ngIf="selected">
+  <p class="output-title">Dane wejściowe z dołączonymi '0':</p>
+  <div *ngIf="selected" class="output-textarea">
     <span>{{strToEmptyByteArrayString(inputText.value)}}</span>
     <span class="color-orange">{{dec2bin(selected.calculate(inputText.value))}}</span>
   </div>
 
-  <p>Wyliczony kod nadmiarowy CRC:</p>
-  <div *ngIf="selected">
+  <p class="output-title">Wyliczony kod nadmiarowy CRC:</p>
+  <div *ngIf="selected" class="output-textarea">
     <span>{{strToByteArrayString(inputText.value)}}</span>
     <span class="color-orange">{{repeat0(dec2bin(selected.calculate(inputText.value)).length)}}</span>
   </div>
 
-  <p>Wygenerowany kod CRC:</p>
-  <div *ngIf="selected">
+  <p class="output-title">Wygenerowany kod CRC:</p>
+  <div *ngIf="selected" class="output-textarea">
     <span>{{this.strToByteArrayString(inputText.value)}}</span>
     <span class="color-orange">{{this.dec2bin(selected.calculate(inputText.value))}}</span>
   </div>
 
   <br/>
-  <mat-form-field class="example-full-width">
+  <mat-form-field  class="form-field">
     <mat-label>Ustaw błąd</mat-label>
     <input matInput type="number" min="0" #errorInput/>
   </mat-form-field>
 
-  <p>Dane do przesłania:</p>
-  <app-bit-negation [crc]="crcMessage(selected, inputText.value)" [positionToNegate]="errorInput.value"></app-bit-negation>
-
+  <p class="output-title">Dane do przesłania:</p>
+  <div class="output-textarea">
+    <app-bit-negation [crc]="crcMessage(selected, inputText.value)" [positionToNegate]="errorInput.value"></app-bit-negation>
+  </div>
 </mat-card>

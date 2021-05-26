@@ -24,6 +24,9 @@ export class CrcComponent implements OnInit {
       charVal = str.charCodeAt(i);
       if (charVal < 256) {
         bytes[i] = this.dec2bin(str.charCodeAt(i));
+        while (bytes[i].length<8) {
+          bytes[i] = '0' + bytes[i];
+        }
       }
     }
     return bytes.join('');
