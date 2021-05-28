@@ -86,6 +86,13 @@
   cursor: pointer;
 }
 
-.clickable:hover{
+.clickable:hover {
   transform: scale(1.2);
+}
+
+.reset-button {
+  width: 20%;
+  height: fit-content;
+  margin-top: auto;
+  margin-bottom: auto
 }

@@ -28,6 +28,7 @@ export class HammingComponent implements OnInit {
 
   saveInputText = (str: string) => {
     this.inputText = str;
+    this.inputError = '';
     this.calculateAll();
   }
 
