@@ -25,21 +25,24 @@
 
   <p class="output-title">Wygenerowane dane z wprowadzonym błędem:</p>
   <div class="output-textarea flex-row">
-    <div class="wrap-text" *ngFor="let error of errorsPositions; index as i" [ngClass]="{'color-red': error}">
+    <div class="wrap-text clickable" *ngFor="let error of errorsPositions; index as i"
+         [ngClass]="{'color-red': error}" (click)="setError(i)">
       {{encodedDataWithErrors[i]}}
     </div>
   </div>
 
   <p class="output-title">Dane po próbie naprawy:</p>
   <div class="output-textarea flex-row">
-    <div class="wrap-text" *ngFor="let error of errorsPositions; index as i" [ngClass]="{'color-red': error, 'color-green': fixedErrorsPositions[i]}">
+    <div class="wrap-text" *ngFor="let error of errorsPositions; index as i"
+         [ngClass]="{'color-red': error, 'color-green': fixedErrorsPositions[i]}">
       {{fixedData[i]}}
     </div>
   </div>
 
   <p class="output-title">Dane odkodowane:</p>
   <div class="output-textarea flex-row">
-    <div class="wrap-text" *ngFor="let error of decodedErrorsPositions; index as i" [ngClass]="{'color-red': error}">
+    <div class="wrap-text" *ngFor="let error of decodedErrorsPositions; index as i"
+         [ngClass]="{'color-red': error}">
       {{decodedData[i]}}
     </div>
   </div>

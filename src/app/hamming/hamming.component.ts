@@ -33,13 +33,18 @@ export class HammingComponent implements OnInit {
 
   saveInputError = (str: string) => {
     this.inputError = str;
-    this.calculateAll();
+    this.encodedDataWithErrors = this.setErrors(this.encodedData, this.inputError);
+    this.calculateErrors();
   }
 
   calculateAll = () => {
     this.byteArrayString = this.strToByteArrayString(this.inputText);
     this.encodedData = this.encodeHamming(this.byteArrayString);
     this.encodedDataWithErrors = this.setErrors(this.encodedData, this.inputError);
+    this.calculateErrors();
+  }
+
+  calculateErrors = () => {
     this.fixedData = this.fixErrors(this.encodedDataWithErrors);
     this.decodedData = this.decodeHamming(this.fixedData);
     this.decodedErrorsPositions = this.checkDecoded(this.byteArrayString, this.decodedData);
@@ -138,6 +143,15 @@ export class HammingComponent implements OnInit {
       errors[i] = str1[i] !== str2[i];
     }
     return errors;
+  }
+
+  setError = (index: number) => {
+    let dataWithErrors = this.encodedDataWithErrors.split('');
+    dataWithErrors[index] = this.encodedDataWithErrors[index] === '0' ? '1' : '0';
+    this.errorsPositions[index] = !this.errorsPositions[index];
+    console.log(this.errorsPositions);
+    this.encodedDataWithErrors = dataWithErrors.join('');
+    this.calculateErrors();
   }
 
   setErrors = (str: string, n: string) => {

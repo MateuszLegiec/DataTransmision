@@ -81,3 +81,11 @@
   flex-direction: row;
   flex-wrap: wrap;
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover{
+  transform: scale(1.2);
+}
