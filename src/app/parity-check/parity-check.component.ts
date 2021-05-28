@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-parity-check',
   templateUrl: './parity-check.component.html',
-  styleUrls: ['./parity-check.component.css']
+  styleUrls: ['../app.component.css']
 })
 export class ParityCheckComponent implements OnInit {
 
@@ -15,7 +15,7 @@ export class ParityCheckComponent implements OnInit {
     this.inputArr = [];
   }
   dec2bin = (dec: number) => (dec >>> 0).toString(2);
-  
+
   strToByteArrayString = (str: string) => {
     let charVal;
     const bytes = [];
@@ -193,7 +193,7 @@ class ParityModel {
         // oznaczam poprawne bity danych
         for (let j = 1; j < 9; j++) {
           this.type[i * 9 + j] = 0;
-        }        
+        }
       } else {
         //jezeli wystapily bledy
         this.errors++;
@@ -218,7 +218,7 @@ class ParityModel {
     // wprowadzajac bledy musze wyzerowac typy
     this.resetTypes();
     // ustawiam n losowych bitow na znaki przeciwne
-    while (changedBits < len) {
+    while (changedBits < n) {
       position = Math.floor(Math.random() * len);
       // sprawdzam czy wybrany bit nie zostal juz przeklamany
       if (!this.type[position]) {

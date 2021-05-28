@@ -1,28 +1,31 @@
-.page-container{
+.page-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgb(235,235,235);
+  background-color: rgb(235, 235, 235);
 
 }
-.header-container{
+
+.header-container {
   /*width: 10rem;*/
   text-transform: uppercase;
+  padding: 0.5rem;
   padding-top: 3rem;
   padding-bottom: 3rem;
-  padding: 0.5rem;
 }
-.header-title{
+
+.header-title {
   width: 100%;
   max-width: 80rem;
 }
 
-.content-container{
+.content-container {
   width: 100%;
   max-width: 50rem;
 }
-.footer-container{
+
+.footer-container {
   width: 100%;
   margin-top: 3rem;
   padding-top: 2rem;
@@ -32,4 +35,49 @@
   flex-direction: row;
   justify-content: center;
   color: gray;
+}
+
+.color-orange {
+  color: orange;
+}
+
+.form-container {
+  /*width: 100%;*/
+  /*max-width: 50rem;*/
+}
+
+.form-field {
+  width: 100%;
+}
+
+.output-textarea {
+  word-wrap: break-word;
+  padding: 1rem;
+  min-height: 1.6rem;
+  border-radius: 0 0 0.2rem 0.2rem;
+  border-top: rgb(150, 150, 150) 1px solid;
+  background-color: rgb(235, 235, 235);
+}
+
+.output-title {
+  font-weight: 500;
+}
+
+.wrap-text {
+  width: fit-content;
+
+}
+
+.color-red {
+  color: red;
+}
+
+.color-green {
+  color: lawngreen;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-crc',
   templateUrl: './crc.component.html',
-  styleUrls: ['./crc.component.css']
+  styleUrls: ['../app.component.css']
 })
 export class CrcComponent implements OnInit {
   crcStorage = new CrcStorage();

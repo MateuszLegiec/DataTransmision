@@ -1,47 +1,49 @@
 <mat-card class="form-container">
-
-<!--  <p class="output-title">Wygenerowany wielomian CRC:</p>-->
-<!--  <p class="output-textarea"></p>-->
-
-  <mat-form-field  class="form-field">
-    <mat-label>Dane wejściowe</mat-label>
-    <textarea matInput #inputText></textarea>
+  <mat-form-field appearance="legacy" class="form-field">
+    <mat-label>Dane wejściowe:</mat-label>
+    <textarea #inputText matInput rows="3"
+              (change)="errorInput.value=''; saveInputText(inputText.value)"
+              (keyup)="errorInput.value=''; saveInputText(inputText.value)"
+              placeholder="Wpisz dowolny ciąg znaków..."></textarea>
   </mat-form-field>
 
   <p class="output-title">Wygenerowany ciąg bitowy:</p>
-  <div class="output-textarea">{{strToByteArrayString(inputText.value)}}</div>
-
-<!--  <p class="output-title">Dane wejściowe z dołączonymi '0':</p>-->
-<!--  <div *ngIf="selected" class="output-textarea">-->
-<!--    <span></span>-->
-<!--    <span class="color-orange"></span>-->
-<!--  </div>-->
-
-<!--  <p class="output-title">Wyliczony kod nadmiarowy CRC:</p>-->
-<!--  <div *ngIf="selected" class="output-textarea">-->
-<!--    <span></span>-->
-<!--    <span class="color-orange"></span>-->
-<!--  </div>-->
-
-<!--  <p class="output-title">Wygenerowany kod Hamminga:</p>-->
-<!--  <div *ngIf="selected" class="output-textarea">-->
-<!--    <span></span>-->
-<!--    <span class="color-orange"></span>-->
-<!--  </div>-->
-
-<!--  <br/>-->
-<!--  <mat-form-field  class="form-field">-->
-<!--    <mat-label>Ustaw błąd</mat-label>-->
-<!--    <input matInput type="number" min="0" #errorInput/>-->
-<!--  </mat-form-field>-->
+  <div class="output-textarea">{{byteArrayString}}</div>
 
   <p class="output-title">Dane zakodowane:</p>
-  <div class="output-textarea">{{encodeHamming(strToByteArrayString(inputText.value))}}</div>
+  <div class="output-textarea">{{encodedData}}</div>
+
+  <br/>
+  <mat-form-field appearance="legacy" class="form-field">
+    <mat-label>Ustaw błąd</mat-label>
+    <input matInput type="number" min="0" max="{{encodedData.length}}" #errorInput
+           (change)="saveInputError(errorInput.value)"
+           (keyup)="saveInputError(errorInput.value)"
+           placeholder="Ile bitów ma zostać przekłamanych?"/>
+    <mat-hint>Maksymalnie: {{encodedData.length}}</mat-hint>
+  </mat-form-field>
+
+  <p class="output-title">Wygenerowane dane z wprowadzonym błędem:</p>
+  <div class="output-textarea flex-row">
+    <div class="wrap-text" *ngFor="let error of errorsPositions; index as i" [ngClass]="{'color-red': error}">
+      {{encodedDataWithErrors[i]}}
+    </div>
+  </div>
+
+  <p class="output-title">Dane po próbie naprawy:</p>
+  <div class="output-textarea flex-row">
+    <div class="wrap-text" *ngFor="let error of errorsPositions; index as i" [ngClass]="{'color-red': error, 'color-green': fixedErrorsPositions[i]}">
+      {{fixedData[i]}}
+    </div>
+  </div>
 
   <p class="output-title">Dane odkodowane:</p>
-  <div class="output-textarea">{{decodeHamming(encodeHamming(strToByteArrayString(inputText.value)))}}</div>
+  <div class="output-textarea flex-row">
+    <div class="wrap-text" *ngFor="let error of decodedErrorsPositions; index as i" [ngClass]="{'color-red': error}">
+      {{decodedData[i]}}
+    </div>
+  </div>
 
-  <p class="output-title">Dane odkodowane:</p>
-  <div class="output-textarea">{{ByteArrayStringToString(decodeHamming(encodeHamming(strToByteArrayString(inputText.value))))}}</div>
-
+  <p class="output-title">Dane wyjściowe:</p>
+  <div class="output-textarea">{{outputText}}</div>
 </mat-card>
