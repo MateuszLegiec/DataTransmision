@@ -8,11 +8,25 @@ import { Component, OnInit } from '@angular/core';
 export class ParityCheckComponent implements OnInit {
 
   private pModel = new ParityModel();
-  private input: string;
-  private inputArr: number[]
+  private inputArr: number[];
+  input: string;
+  outputBin: string;
+  outputStr: string;
+  encoded: string;
+  errorStr : string;
+  errorTypes: number[];
+  fixedStr: string;
+  fixedTypes: number[];
   constructor() {
     this.input = "";
     this.inputArr = [];
+    this.outputBin = "";
+    this.outputStr = "";
+    this.encoded = "";
+    this.errorStr = "";
+    this.errorTypes = [];
+    this.fixedStr = "";
+    this.fixedTypes = [];
   }
   dec2bin = (dec: number) => (dec >>> 0).toString(2);
 
@@ -28,9 +42,7 @@ export class ParityCheckComponent implements OnInit {
         }
       }
     }
-    this.input = bytes.join('');
-    this.inputArr = this.strToNumArray(this.input);
-    return this.input;
+    return bytes.join('');
   }
 
   strToNumArray = (str: string) => {
@@ -53,36 +65,73 @@ export class ParityCheckComponent implements OnInit {
     return string;
   }
 
-  encodeParityCode() {
+  ByteArrayStringToString = (str: string) => {
+    let decodedText = '';
+    let temp = '';
+    for (let i = 0; i < str.length; i++) {
+      temp += str[i];
+      if ((i + 1) % 8 === 0) {
+        decodedText += String.fromCharCode(parseInt(temp, 2));
+        temp = '';
+      }
+    }
+    return decodedText;
+  }
+
+  setInput = (str: string) => {
+    this.input = this.strToByteArrayString(str);
+    this.inputArr = this.strToNumArray(this.input);
+    this.encodeParityCode();
+    this.errorStr = "";
+    this.fixedStr = "";
+    this.decodeParityCode();
+  }
+
+  encodeParityCode = () => {
+    let encodedData = '';
     if (this.inputArr.length) {
       this.pModel.encode(this.inputArr);
-      return this.numArrayToStr(this.pModel.getCode());
+      encodedData = this.numArrayToStr(this.pModel.getCode());
     }
-    return '';
+    this.encoded = encodedData;
   }
 
-  decodeParityCode() {
+  decodeParityCode = () => {
     if (this.inputArr.length) {
       this.pModel.decode();
-      return this.numArrayToStr(this.pModel.getDecoded());
+      this.outputBin = this.numArrayToStr(this.pModel.getDecoded());
+      this.outputStr = this.ByteArrayStringToString(this.outputBin);
     }
-    return '';
   }
 
-  setErrors(n: string) {
-    if(n) {
+  setErrors = (n: string) => {
+    if (n) {
       let k = parseInt(n);
       // n -> liczba bitow do przeklamania
       this.pModel.setRandErrors(k);
+      this.errorTypes = this.getErrorTypes();
     }
-    return this.numArrayToStr(this.pModel.getCode());
+    this.errorStr = this.numArrayToStr(this.pModel.getCode());
   }
 
-  fixErrors() {
-    return this.numArrayToStr(this.pModel.getCode());
+  fixErrors = () => {
+    this.pModel.fix();
+    this.fixedTypes = this.getErrorTypes();
+    this.fixedStr = this.numArrayToStr(this.pModel.getCode());
   }
 
-  ngOnInit(): void {
+  decodeErrors = (str: string) => {
+    this.encodeParityCode();
+    this.setErrors(str);
+    this.fixErrors();
+    this.decodeParityCode();
+  }
+
+  getErrorTypes = () => {
+    return this.pModel.getTypes();
+  }
+
+  ngOnInit() : void {
   }
 
 }
@@ -109,6 +158,10 @@ class ParityModel {
 
   getDecoded() {
     return this.decoded;
+  }
+
+  getTypes() {
+    return this.type;
   }
 
   // kodowanie danych przy użyciu kontroli parzystości
@@ -152,7 +205,7 @@ class ParityModel {
       }
       ones += this.code[i * 9];
       // jezeli nie wykryto bledow
-      if (!ones) {
+      if (ones % 2 === 0) {
         // oznaczam poprawny bit kontrolny
         this.type[i * 9] = 3;
         // oznaczam poprawne bity danych
@@ -164,7 +217,7 @@ class ParityModel {
         this.errors++;
         // oznaczam bit kontrolny jako niewlasciwy
         this.type[i * 9] = 5;
-        // onzaczam dane jako niewlasciwe
+        // oznaczam dane jako niewlasciwe
         for (let j = 1; j < 9; j++) {
           this.type[i * 9 + j] = 2;
         }
@@ -174,7 +227,7 @@ class ParityModel {
 
   fix() {
     let len = this.code.length;
-    // wyzerwoanie typow bitow
+    // wyzerowanie typow bitow
     this.resetTypes();
     let bytesNum = len / 9;
     this.errors = 0;
@@ -187,7 +240,7 @@ class ParityModel {
       }
       ones += this.code[i*9];
       // jezeli nie wykryto bledow
-      if (!ones) {
+      if (ones % 2 === 0) {
         // oznaczam poprawny bit kontrolny
         this.type[i*9] = 3;
         // oznaczam poprawne bity danych

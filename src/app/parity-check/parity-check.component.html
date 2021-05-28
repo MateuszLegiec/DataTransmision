@@ -1,28 +1,61 @@
 <mat-card class="form-container">
   <mat-form-field appearance="legacy" class="form-field">
-    <mat-label>Dane wejściowe</mat-label>
-    <textarea matInput #parityInput placeholder="Wpisz dowolny ciąg znaków..."  rows="3"></textarea>
+    <mat-label>Dane wejściowe:</mat-label>
+    <textarea matInput #parityInput rows="3"
+              placeholder="Wpisz dowolny ciąg znaków..."
+              (change)="setInput(parityInput.value)"
+              (keyup)="setInput(parityInput.value)"></textarea>
   </mat-form-field>
 
   <p class="output-title">Wygenerowany ciąg bitowy:</p>
-  <div class="output-textarea">{{ strToByteArrayString(parityInput.value) }}</div>
+  <div class="output-textarea">{{ input }}</div>
 
   <p class="output-title">Wygenerowany kod parzystości:</p>
-  <div class="output-textarea">{{ encodeParityCode() }}</div>
+  <div class="output-textarea">{{ encoded }}</div>
   <br/>
   <mat-form-field appearance="legacy" class="form-field">
     <mat-label>Ustaw błąd</mat-label>
     <input matInput type="number" min="0" #errorInput
-           placeholder="Ile bitów ma zostać przekłamanych?"/>
+           placeholder="Ile bitów ma zostać przekłamanych?"
+           (change)="decodeErrors(errorInput.value)"
+           (keyup)="decodeErrors(errorInput.value)"/>
   </mat-form-field>
 
   <p class="output-title">Wygenerowane dane z wprowadzonym błędem:</p>
-  <div class="output-textarea">{{ setErrors(errorInput.value) }}</div>
+  <div class="output-textarea flex-row">
+    <div class="wrap-text"
+      *ngFor="let type of errorTypes; index as i"
+      [ngClass]="{'color-red': errorStr[i] !== encoded[i]}">
+      {{  errorStr[i] }}
+    </div>
+  </div>
+
+  <div class="flex-row">
+    <div class="legend-color" style="background-color: red"></div><div class="legend-text">Zakłócony bit danych</div>
+  </div>
 
   <p class="output-title">Dane po próbie korekcji:</p>
-  <div class="output-textarea">{{ fixErrors() }}</div>
+  <div class="output-textarea flex-row">
+    <div class="wrap-text"
+      *ngFor="let type of fixedTypes; index as i"
+      [ngClass]="{'color-green': type === 0, 'color-red': type === 2,  'color-blue': type === 3, 'color-orange': type === 5}">
+      {{ fixedStr[i] }}
+    </div>
+  </div>
+
+  <div class="flex-row">
+    <div class="legend-color" style="background-color: lawngreen"></div><div class="legend-text">Bit danych poprawny</div>
+    <div class="legend-color" style="background-color: red"></div><div class="legend-text">Niepewny bit danych</div>
+    <div class="legend-color" style="background-color: dodgerblue"></div><div class="legend-text">Bit kontrolny poprawny</div>
+    <div class="legend-color" style="background-color: orange"></div><div class="legend-text">Niepewny bit kontrolny</div>
+  </div>
 
   <p class="output-title">Dane wyjściowe:</p>
-  <div class="output-textarea">{{ decodeParityCode() }}</div>
+  <div class="output-textarea">
+        {{ outputBin }}
+  </div>
+
+  <p class="output-title">Dane wyjściowe (tekst):</p>
+  <div class="output-textarea">{{ outputStr }}</div>
 </mat-card>
 

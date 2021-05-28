@@ -63,6 +63,17 @@
   font-weight: 500;
 }
 
+.legend-color {
+  border-radius: 0.2rem 0.2rem 0.2rem 0.2rem;
+  height: 1em;
+  width: 0.5em;
+}
+
+.legend-text {
+  padding-left: 0.2em; 
+  padding-right: 0.3em;
+}
+
 .wrap-text {
   width: fit-content;
 
@@ -74,6 +85,14 @@
 
 .color-green {
   color: lawngreen;
+}
+
+.color-violet {
+  color: indigo;
+}
+
+.color-blue {
+  color: dodgerblue;
 }
 
 .flex-row {
