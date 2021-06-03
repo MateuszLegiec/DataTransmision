@@ -150,7 +150,6 @@ export class HammingComponent implements OnInit {
     let dataWithErrors = this.encodedDataWithErrors.split('');
     dataWithErrors[index] = this.encodedDataWithErrors[index] === '0' ? '1' : '0';
     this.errorsPositions[index] = !this.errorsPositions[index];
-    console.log(this.errorsPositions);
     this.encodedDataWithErrors = dataWithErrors.join('');
     this.calculateErrors();
   }
@@ -171,7 +170,6 @@ export class HammingComponent implements OnInit {
         }
       }
     }
-    console.log(this.errorsPositions.join(''));
     return dataWithErrors.join('');
   }
 

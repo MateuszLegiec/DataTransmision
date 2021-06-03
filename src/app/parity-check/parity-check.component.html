@@ -3,8 +3,8 @@
     <mat-label>Dane wejściowe:</mat-label>
     <textarea matInput #parityInput rows="3"
               placeholder="Wpisz dowolny ciąg znaków..."
-              (change)="setInput(parityInput.value)"
-              (keyup)="setInput(parityInput.value)"></textarea>
+              (change)="errorInput.value=''; setInput(parityInput.value)"
+              (keyup)="errorInput.value=''; setInput(parityInput.value)"></textarea>
   </mat-form-field>
 
   <p class="output-title">Wygenerowany ciąg bitowy:</p>
@@ -13,19 +13,23 @@
   <p class="output-title">Wygenerowany kod parzystości:</p>
   <div class="output-textarea">{{ encoded }}</div>
   <br/>
-  <mat-form-field appearance="legacy" class="form-field">
+  <mat-form-field appearance="legacy" class="form-field" style="width: 79%; margin-right: 1%">
     <mat-label>Ustaw błąd</mat-label>
-    <input matInput type="number" min="0" #errorInput
+    <input matInput type="number" value="0" min="0" #errorInput
            placeholder="Ile bitów ma zostać przekłamanych?"
            (change)="decodeErrors(errorInput.value)"
            (keyup)="decodeErrors(errorInput.value)"/>
   </mat-form-field>
+  <button mat-raised-button class="reset-button"
+          (click)="errorInput.value = ''; decodeErrors('0')">Resetuj
+  </button>
 
   <p class="output-title">Wygenerowane dane z wprowadzonym błędem:</p>
   <div class="output-textarea flex-row">
     <div class="wrap-text"
       *ngFor="let type of errorTypes; index as i"
-      [ngClass]="{'color-red': errorStr[i] !== encoded[i]}">
+      [ngClass]="{'color-red': errorStr[i] !== encoded[i]}"
+      (click)="setError(i)">
       {{  errorStr[i] }}
     </div>
   </div>

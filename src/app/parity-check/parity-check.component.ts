@@ -81,10 +81,11 @@ export class ParityCheckComponent implements OnInit {
   setInput = (str: string) => {
     this.input = this.strToByteArrayString(str);
     this.inputArr = this.strToNumArray(this.input);
-    this.encodeParityCode();
-    this.errorStr = "";
-    this.fixedStr = "";
-    this.decodeParityCode();
+    // this.encodeParityCode();
+    // this.errorStr = "";
+    // this.fixedStr = "";
+    // this.decodeParityCode();
+    this.decodeErrors('0');
   }
 
   encodeParityCode = () => {
@@ -112,6 +113,14 @@ export class ParityCheckComponent implements OnInit {
       this.errorTypes = this.getErrorTypes();
     }
     this.errorStr = this.numArrayToStr(this.pModel.getCode());
+  }
+
+  setError = (n: number) => {
+    this.pModel.setError(n);
+    this.errorTypes = this.getErrorTypes();
+    this.errorStr = this.numArrayToStr(this.pModel.getCode());
+    this.fixErrors();
+    this.decodeParityCode();
   }
 
   fixErrors = () => {
